@@ -1,6 +1,6 @@
 {
   "name": "ESP Thermometer",
   "tagline": "Battery operated inexpensive internet enabled thermometer built with ESP-01 WiFi module, DS18S20 digital thermometer, Arduino IDE and Ubidots",
-  "body": "The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.\r\n\r\n# Main components\r\nHere what you're going to need to build the project:\r\n- ESP-01, a ESP8266 chip based WiFi module (others may also work with some modifications)\r\n- DS18S20 digital thermometer chip\r\n- FTDI or USB-to-Serial (3v3!) adapter (for programming the ESP8266)\r\n- some cables, and a few discrete components (see the schematic)\r\n\r\n \r\n# Hardware\r\n# Software\r\n\r\n",
+  "body": "The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.\r\n\r\n# Main components\r\nHere what you're going to need to build the project:\r\n- ESP-01, a ESP8266 chip based WiFi module (others may also work with some modifications)\r\n- DS18S20 digital thermometer chip\r\n- FTDI or USB-to-Serial (3v3!) adapter (for programming the ESP8266)\r\n- some cables, and a few discrete components (see the schematic)\r\n\r\n# Hardware\r\n# Software\r\n\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
