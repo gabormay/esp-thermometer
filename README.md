@@ -3,7 +3,7 @@ The objective of this project is to create a really inexpensive internet enabled
 # Main components
 Here what you're going to need:
 - ESP-01, a ESP8266 chip based WiFi module (others may also work with some modifications)
-- DS18S20 digital thermometer chip
+- DS18S20 digital thermometer chip (or compatible)
 - 2xAA batteries or a 3V power adapter
 - FTDI or USB-to-Serial (3v3!) converter (for programming the ESP8266)
 - some cables, and a few discrete components (see the schematic)
