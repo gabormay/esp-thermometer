@@ -10,9 +10,12 @@ Here what you're going to need:
 - lot of patience :)
 
 # General notes and caveats
-Some important things to watch out for
+- ESP8266 works with 3.3V, the pins are _not_ 5V tolerant!
+- Use an external power supply for reliable programming (not the 3.3V from the USB converter for example)
+- By now, there's extensive documentation is available for the ESP8266 and related stuff. If you're stuck or have an issue, pleaes  try looking through the materials in the [References] section and also try Google - chances are somebody else had that problem and you can find a solution quickly
 
 # First steps
+
 [TBD: basic wiring, programming the ESP on 'breadboard' first
 
 # Building the thermometer
