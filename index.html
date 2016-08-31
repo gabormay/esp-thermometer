@@ -56,7 +56,7 @@
 </ul>
 
 <h1>
-<a id="first-steps" class="anchor" href="#first-steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>First steps</h1>
+<a id="first-steps---programming-your-esp8266" class="anchor" href="#first-steps---programming-your-esp8266" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>First steps - programming your ESP8266</h1>
 
 <p>Start with the installation steps from <a href="https://github.com/esp8266/Arduino#installing-with-boards-manager">https://github.com/esp8266/Arduino#installing-with-boards-manager</a>:</p>
 
@@ -104,21 +104,21 @@
 <li>On the board, connect both <code>RST</code> and <code>GPIO0</code> to GND (push the buttons if you have added them)</li>
 <li>Release RST (connect back to VCC), while <code>GPIO0</code> is still at GND</li>
 <li>
-<p>In the Serial Monitor you should see the following:</p>
+<p>In the Serial Monitor you should see the following message from the bootloader:</p>
 
 <pre><code> ets Jan  8 2013,rst cause:2, boot mode:(1,6)
 </code></pre>
 
-<p>This means that the bootloader is now in serial programming mode and ready to receive the new firmware.</p>
+<p>This means that the module is now in serial programming mode and ready to receive the new firmware.</p>
 </li>
 <li>
 <code>GPIO0</code> can now be released back to VCC</li>
 <li>Select Sketch/Upload</li>
 </ul>
 
-<p>In a short while the upload should finish without errors. If everything went fine the blue LED on the board should start blinking. You can reset the board by connecting <code>RST</code> to GND momentarily. Make sure that <code>GPIO0</code> is <em>not</em> connected to GND otherwise you will enter the programming mode again.</p>
+<p>In a short while the upload should finish without errors. If everything went fine the blue LED on the board will start blinking. You can now reset the board by connecting <code>RST</code> to GND momentarily. Make sure that <code>GPIO0</code> is <em>not</em> connected to GND otherwise you will enter the programming mode again.</p>
 
-<p>At this point I suggest you to play around with your ESP8266. Try changing the example Sketch or try other Sketches. Try various functions from the <a href="https://github.com/esp8266/Arduino/blob/master/doc/libraries.md">included libraries</a>. </p>
+<p>At this point I suggest you to play around with your ESP8266. Try changing the exampl or try other sketches. Look at the the list of functions in the <a href="https://github.com/esp8266/Arduino/blob/master/doc/libraries.md">included libraries</a> and try to use them in your program.</p>
 
 <p>You can use <code>Serial.print()</code> family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via <code>Serial.begin(74880)</code>.</p>
 
@@ -130,16 +130,37 @@
 <h2>
 <a id="the-circuit" class="anchor" href="#the-circuit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The circuit</h2>
 
+<p>Here's the schematic:
+![img/schematic.png]</p>
+
 <h2>
 <a id="the-software" class="anchor" href="#the-software" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The software</h2>
+
+<p>See (src/ESPThermometer/ESPThermometer.ino)</p>
 
 <h1>
 <a id="running-from-a-battery" class="anchor" href="#running-from-a-battery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running from a battery</h1>
 
-<h1>
-<a id="what-else" class="anchor" href="#what-else" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What else?</h1>
+<ul>
+<li>Deep sleep</li>
+<li>Power LED</li>
+</ul>
 
-<p>[TBD: things to improve / try]</p>
+<h1>
+<a id="whats-next" class="anchor" href="#whats-next" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What's next?</h1>
+
+<ul>
+<li>Dynamic WiFi setup</li>
+<li>Dynamic Ubidots variable setup based on Chip ID</li>
+<li>Implement additional hardware functions:
+
+<ul>
+<li>connect a second sensor, e.g. for humidity or light</li>
+<li>add relay switch and control it through Ubidots</li>
+<li>replace Ubidots with some other (maybe custom) platform</li>
+</ul>
+</li>
+</ul>
 
 <h1>
 <a id="references-and-further-reading" class="anchor" href="#references-and-further-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References and further reading</h1>
