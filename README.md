@@ -19,6 +19,8 @@ Some important things to watch out for
 ## The circuit
 ## The software
 
+# Running from a battery
+
 # What else?
 [TBD: things to improve / try]
 
