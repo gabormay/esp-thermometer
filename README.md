@@ -41,17 +41,24 @@ Then put the ESP bootloader into programming mode:
 - Open the Serial Monitor in Arduino IDE (Tools/Serial Monitor)
   * Choose the proper COM port
   * Choose 74880 baud (this is necessary in order to see bootloader messages properly)
-- On the board, connect both RST and GPIO0 to GND (push the buttons if you have added them)
-- Release RST (connect back to VCC), while GPIO0 is still at GND
+- On the board, connect both `RST` and `GPIO0` to GND (push the buttons if you have added them)
+- Release RST (connect back to VCC), while `GPIO0` is still at GND
 - In the Serial Monitor you should see the following:
 
     ```
      ets Jan  8 2013,rst cause:2, boot mode:(1,6)
     ```
     This means that the bootloader is now in serial programming mode and ready to receive the new firmware.
+- `GPIO0` can now be released back to VCC
 - Select Sketch/Upload
 
-In a short while the upload should finish without errors. If everything went fine the blue LED on the board should start blinking.
+In a short while the upload should finish without errors. If everything went fine the blue LED on the board should start blinking. You can reset the board by connecting `RST` to GND momentarily. Make sure that `GPIO0` is _not_ connected to GND otherwise you will enter the programming mode again.
+
+At this point I suggest you to play around with your ESP8266. Try changing the example Sketch or try other Sketches. Try various functions from the [included libraries](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md). 
+
+You can use `Serial.print()` family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via `Serial.begin(74880)`.
+
+Once you feel comfortable programming your ESP8266, come back here and read on.
 
 # Building the thermometer
 ## The circuit
