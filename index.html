@@ -30,14 +30,16 @@
       <section>
         <p>The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.</p>
 
+<p><img src="img/final.jpg" alt="Completed project photo"></p>
+
 <h1>
 <a id="main-components" class="anchor" href="#main-components" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Main components</h1>
 
-<p>Here what you're going to need:</p>
+<p>Here's what you're going to need:</p>
 
 <ul>
 <li>ESP-01, a ESP8266 chip based WiFi module (others may also work with some modifications)</li>
-<li>DS18S20 digital thermometer chip</li>
+<li>DS18S20 digital thermometer chip (or compatible)</li>
 <li>2xAA batteries or a 3V power adapter</li>
 <li>FTDI or USB-to-Serial (3v3!) converter (for programming the ESP8266)</li>
 <li>some cables, and a few discrete components (see the schematic)</li>
@@ -47,12 +49,80 @@
 <h1>
 <a id="general-notes-and-caveats" class="anchor" href="#general-notes-and-caveats" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General notes and caveats</h1>
 
-<p>Some important things to watch out for</p>
+<ul>
+<li>ESP8266 works with 3.3V, the pins are <em>not</em> 5V tolerant!</li>
+<li>Use an external power supply for reliable programming (not the 3.3V from the USB converter for example)</li>
+<li>If you're stuck or have an issue with setting up the ESP8266, please  try looking through the materials in the <a href="References%20and%20further%20reading">References</a> section and also try Google - chances are somebody else had that problem and you can find a solution quickly</li>
+</ul>
 
 <h1>
 <a id="first-steps" class="anchor" href="#first-steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>First steps</h1>
 
-<p>[TBD: basic wiring, programming the ESP on 'breadboard' first</p>
+<p>Start with the installation steps from <a href="https://github.com/esp8266/Arduino#installing-with-boards-manager">https://github.com/esp8266/Arduino#installing-with-boards-manager</a>:</p>
+
+<ul>
+<li>Install the Arduino IDE </li>
+<li>Install the ESP8266 core library and select the board called 'Generic ESP8266 Module'</li>
+</ul>
+
+<p>Wire up your ESP module on a breadboard as explained in <a href="https://github.com/esp8266/Arduino/blob/master/doc/boards.md#minimal-hardware-setup-for-bootloading-and-usage">https://github.com/esp8266/Arduino/blob/master/doc/boards.md#minimal-hardware-setup-for-bootloading-and-usage</a></p>
+
+<ul>
+<li>Use an external power source (do not use the USB-to-serial adapter's VCC)</li>
+<li>GND, TX and RX should be connected to the serial adapter's GND, RX and TX, respectively</li>
+<li>CH_PD (chip enable) should be connected the VCC (10k pull-up resistor recommended)</li>
+<li>RST and GPIO0 should be pulled-up to VCC
+
+<ul>
+<li>For convenience, add a switch or push button to be able to pull each down to GND momentarily</li>
+</ul>
+</li>
+<li>Leave GPIO2 unconnected</li>
+</ul>
+
+<p>Now load the Sketch from File/Examples/ESP8266/Blink</p>
+
+<ul>
+<li>Fill in your WiFi ssid and password</li>
+<li>'Verify' should show no errors</li>
+</ul>
+
+<p>Now you're ready to flash you first program to the ESP8266! Make sure that you have the Board setting in Arduino IDE set correctly:</p>
+
+<p><img src="img/Board%20settings.png" alt="Board settings in Arduino IDE"></p>
+
+<p>Then put the ESP bootloader into programming mode:</p>
+
+<ul>
+<li>Open the Serial Monitor in Arduino IDE (Tools/Serial Monitor)
+
+<ul>
+<li>Choose the proper COM port</li>
+<li>Choose 74880 baud (this is necessary in order to see bootloader messages properly)</li>
+</ul>
+</li>
+<li>On the board, connect both <code>RST</code> and <code>GPIO0</code> to GND (push the buttons if you have added them)</li>
+<li>Release RST (connect back to VCC), while <code>GPIO0</code> is still at GND</li>
+<li>
+<p>In the Serial Monitor you should see the following:</p>
+
+<pre><code> ets Jan  8 2013,rst cause:2, boot mode:(1,6)
+</code></pre>
+
+<p>This means that the bootloader is now in serial programming mode and ready to receive the new firmware.</p>
+</li>
+<li>
+<code>GPIO0</code> can now be released back to VCC</li>
+<li>Select Sketch/Upload</li>
+</ul>
+
+<p>In a short while the upload should finish without errors. If everything went fine the blue LED on the board should start blinking. You can reset the board by connecting <code>RST</code> to GND momentarily. Make sure that <code>GPIO0</code> is <em>not</em> connected to GND otherwise you will enter the programming mode again.</p>
+
+<p>At this point I suggest you to play around with your ESP8266. Try changing the example Sketch or try other Sketches. Try various functions from the <a href="https://github.com/esp8266/Arduino/blob/master/doc/libraries.md">included libraries</a>. </p>
+
+<p>You can use <code>Serial.print()</code> family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via <code>Serial.begin(74880)</code>.</p>
+
+<p>Once you feel comfortable programming your ESP8266, come back here and read on.</p>
 
 <h1>
 <a id="building-the-thermometer" class="anchor" href="#building-the-thermometer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building the thermometer</h1>
@@ -62,6 +132,9 @@
 
 <h2>
 <a id="the-software" class="anchor" href="#the-software" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The software</h2>
+
+<h1>
+<a id="running-from-a-battery" class="anchor" href="#running-from-a-battery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running from a battery</h1>
 
 <h1>
 <a id="what-else" class="anchor" href="#what-else" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What else?</h1>
