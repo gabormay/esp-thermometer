@@ -67,7 +67,7 @@ Here's the schematic:
 
 
 ## The software
-See (src/ESPThermometer/ESPThermometer.ino)
+See the [source](src/ESPThermometer/ESPThermometer.ino)
 
 # Running from a battery
 - Deep sleep
