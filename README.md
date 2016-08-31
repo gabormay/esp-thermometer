@@ -63,7 +63,7 @@ Once you feel comfortable programming your ESP8266, come back here and read on.
 # Building the thermometer
 ## The circuit
 Here's the schematic:
-![img/schematic.png]
+![Schematic](img/schematic.png)
 
 
 ## The software
