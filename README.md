@@ -1,5 +1,9 @@
 The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.
 
+>
+> This is still work in progress. Please check back later.
+> 
+
   ![Completed project photo](img/final.jpg)
   
 # Main components
