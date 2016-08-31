@@ -1,5 +1,7 @@
 The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.
 
+  ![Completed project photo](img/final.jpg)
+  
 # Main components
 Here's what you're going to need:
 - ESP-01, a ESP8266 chip based WiFi module (others may also work with some modifications)
@@ -12,10 +14,10 @@ Here's what you're going to need:
 # General notes and caveats
 - ESP8266 works with 3.3V, the pins are _not_ 5V tolerant!
 - Use an external power supply for reliable programming (not the 3.3V from the USB converter for example)
-- By now, there's extensive documentation is available for the ESP8266 and related stuff. If you're stuck or have an issue, pleaes  try looking through the materials in the [References](References and further reading) section and also try Google - chances are somebody else had that problem and you can find a solution quickly
+- If you're stuck or have an issue with setting up the ESP8266, please  try looking through the materials in the [References](References and further reading) section and also try Google - chances are somebody else had that problem and you can find a solution quickly
 
 # First steps
-Start with the installation steps from https://github.com/esp8266/Arduino#installing-with-boards-manager
+Start with the installation steps from https://github.com/esp8266/Arduino#installing-with-boards-manager:
 - Install the Arduino IDE 
 - Install the ESP8266 core library and select the board called 'Generic ESP8266 Module'
 
@@ -32,8 +34,24 @@ Now load the Sketch from File/Examples/ESP8266/Blink
 - 'Verify' should show no errors
 
 Now you're ready to flash you first program to the ESP8266! Make sure that you have the Board setting in Arduino IDE set correctly:
-![Board settings in Arduino IDE](img/Board settings.png)
 
+  ![Board settings in Arduino IDE](img/Board settings.png)
+
+Then put the ESP bootloader into programming mode:
+- Open the Serial Monitor in Arduino IDE (Tools/Serial Monitor)
+  * Choose the proper COM port
+  * Choose 74880 baud (this is necessary in order to see bootloader messages properly)
+- On the board, connect both RST and GPIO0 to GND (push the buttons if you have added them)
+- Release RST (connect back to VCC), while GPIO0 is still at GND
+- In the Serial Monitor you should see the following:
+
+    ```
+     ets Jan  8 2013,rst cause:2, boot mode:(1,6)
+    ```
+    This means that the bootloader is now in serial programming mode and ready to receive the new firmware.
+- Select Sketch/Upload
+
+In a short while the upload should finish without errors. If everything went fine the blue LED on the board should start blinking.
 
 # Building the thermometer
 ## The circuit
