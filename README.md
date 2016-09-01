@@ -73,6 +73,46 @@ Here's the schematic:
 ## The software
 See the [source](src/ESPThermometer/ESPThermometer.ino)
 
+```
+ ets Jan  8 2013,rst cause:2, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v3ffe8654
+~ld
+à
+ESP Thermometer starting...
+Chip ID: [9c0c4e]
+
+VCC = 2581 mV
+Requesting temperatures...DONE
+TEMP = 26.6 C
+Connecting and sending...
+.......WiFi connected
+IP address: 
+192.168.178.44
+Posting your variables
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 31 Aug 2016 20:18:29 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: close
+Vary: Accept-Encoding
+Vary: Accept
+Allow: POST, OPTIONS
+
+2c
+[{"status_code": 201}, {"status_code": 201}]
+0
+
+Entering deep sleep [ 557s ] ...
+
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+```
+
 # Running from a battery
 - Deep sleep
 - Power LED
