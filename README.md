@@ -84,7 +84,7 @@ v3ffe8654
 ~ld
 à
 ESP Thermometer starting...
-Chip ID: [9c0c4e]
+Chip ID: [<your chip ID here>]
 
 VCC = 2581 mV
 Requesting temperatures...DONE
@@ -111,6 +111,9 @@ Allow: POST, OPTIONS
 Entering deep sleep [ 557s ] ...
 
  ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+[... and so on ...]
+
 ```
 
 # Running from a battery
