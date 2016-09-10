@@ -59,9 +59,9 @@ Then put the ESP bootloader into programming mode:
 
 In a short while the upload should finish without errors. If everything went fine the blue LED on the board will start blinking. You can now reset the board by connecting `RST` to GND momentarily. Make sure that `GPIO0` is _not_ connected to GND otherwise you will enter the programming mode again.
 
-At this point I suggest you to play around with your ESP8266. Try changing the exampl or try other sketches. Look at the the list of functions in the [included libraries](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md) and try to use them in your program.
+At this point I suggest you to play around with your ESP8266. Try changing the example or try other sketches. Look at the the list of functions in the [included libraries](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md) and try to use them in your program.
 
-You can use `Serial.print()` family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via `Serial.begin(74880)`.
+You can use the `Serial.print()` family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via `Serial.begin(74880)`.
 
 Once you feel comfortable programming your ESP8266, come back here and read on.
 
