@@ -67,9 +67,23 @@ Once you feel comfortable programming your ESP8266, come back here and read on.
 
 # Building the thermometer
 ## The circuit
-Here's the schematic:
-![Schematic](img/schematic.png)
 
+   ![Schematic](img/schematic.png)
+
+Explanation:
+- U1 is a 2x4 DIP header for connecting the ESP module
+- SERIAL is a 1x3 DIP header for connecting a serial interface (3v3 only!)
+- RST and PRG are push buttons, activating RESET and Programming mode, respectively
+  * to simply reset the board, push RST
+  * to enter programming mode 
+    + push RST then PRG (keep both pushed)
+    + Release RST then PRG
+- C2 is across the rails, try to put it close to the module power pins (increases stability of the board)
+- R1 and C1 is an RC delay circuit for reliable deep sleep operation
+  * purpose is to keep CH_PD low for enough time for the board to properly reset upon waking from deep sleep
+  * only applies if your GPIO16 is tied to CH_PD
+- U2 is the digital thermometer chip (DS18S20)
+- R2 is a pull-up
 
 ## The software
 See the [source](src/ESPThermometer/ESPThermometer.ino)
