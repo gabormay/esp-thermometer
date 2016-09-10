@@ -4,7 +4,8 @@ The objective of this project is to create a really inexpensive internet enabled
 > This is still work in progress. Please check back later.
 > 
 
-  ![Completed project photo](img/final.jpg)
+  ![Completed project photo 1](img/final-1.jpg)
+  ![Completed project photo 2](img/final-2.jpg)
   
 # Main components
 Here's what you're going to need:
