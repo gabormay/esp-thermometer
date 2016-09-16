@@ -72,7 +72,9 @@ Once you feel comfortable programming your ESP8266, come back here and read on.
 
 Explanation:
 - U1 is a 2x4 DIP header for connecting the ESP module
-- SERIAL is a 1x3 DIP header for connecting a serial interface (3v3 only!)
+- SERIAL is a 1x3 DIP header for connecting a serial interface
+  * Connect GND, TX and RX to your USB-toSerial adapter's GND, RX and TX, respectively
+  * Double-check that the adapter uses 3.3V signal levels
 - RST and PRG are push buttons, activating RESET and Programming mode, respectively
   * to simply reset the board, push RST
   * to enter programming mode 
@@ -85,8 +87,31 @@ Explanation:
 - U2 is the digital thermometer chip (DS18S20)
 - R2 is a pull-up
 
+## Ubidots
+- Register at Ubidots
+- Create a source with two variables:
+  * Temperature (unit: C)
+  * Battery voltage (unit: mV)
+- Note your API token and the ID of these two variables
+
 ## The software
-See the [source](src/ESPThermometer/ESPThermometer.ino)
+Download and edit the [source](src/ESPThermometer/ESPThermometer.ino)
+- Fill in you SSID and WiFi credentials
+- Fill in your Ubidots token and variable IDs (from above)
+
+Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to an USB port on your computer
+
+Connect the power rails to an external 3.3V power source (e.g. 2xAA battery or a stabilized wall adapter)
+- In general anything between 2.7 - 3.3 V should work
+- Do **not** use the serial adapter's VCC
+
+Once you have everything connected, you should dowload the program to the module
+- Put the module into program mode (push RST, PRG and then release RST, PRG)
+- Verify that you get the correct bootloader prompt - see [](First steps - programming your ESP8266)
+- Load the program into the Arduino IDE and upload (make sure to use the same settings as in [](First steps - programming your ESP8266)
+- Rest the board for good measure (push and release RST)
+
+If everything went well you should see an output similar to this in the serial monitor:
 
 ```
  ets Jan  8 2013,rst cause:2, boot mode:(3,6)
@@ -132,16 +157,25 @@ Entering deep sleep [ 557s ] ...
 ```
 
 # Running from a battery
+I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Let's dig a little bit into how this was made possible and what can you do to further improve battery life.
+
 - Deep sleep
-- Power LED
+- Power LED!
+- Further work
+  * proper deep sleep (GPIO16 to RST) with less frequent RF calibration
+  * use higher capacity batteries (e.g. D or A)
+  * update less frequently
 
 # What's next?
+There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.
+
 - Dynamic WiFi setup
 - Dynamic Ubidots variable setup based on Chip ID
 - Implement additional hardware functions:
   * connect a second sensor, e.g. for humidity or light
   * add relay switch and control it through Ubidots
   * replace Ubidots with some other (maybe custom) platform
+- Extend battery life (see above)
 
 # References and further reading
-
+TBD
