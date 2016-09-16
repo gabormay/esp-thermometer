@@ -34,7 +34,8 @@
 <p>This is still work in progress. Please check back later.</p>
 </blockquote>
 
-<p><img src="img/final.jpg" alt="Completed project photo"></p>
+<p><img src="img/final-1.jpg" alt="Completed project photo 1">
+  <img src="img/final-2.jpg" alt="Completed project photo 2"></p>
 
 <h1>
 <a id="main-components" class="anchor" href="#main-components" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Main components</h1>
@@ -122,9 +123,9 @@
 
 <p>In a short while the upload should finish without errors. If everything went fine the blue LED on the board will start blinking. You can now reset the board by connecting <code>RST</code> to GND momentarily. Make sure that <code>GPIO0</code> is <em>not</em> connected to GND otherwise you will enter the programming mode again.</p>
 
-<p>At this point I suggest you to play around with your ESP8266. Try changing the exampl or try other sketches. Look at the the list of functions in the <a href="https://github.com/esp8266/Arduino/blob/master/doc/libraries.md">included libraries</a> and try to use them in your program.</p>
+<p>At this point I suggest you to play around with your ESP8266. Try changing the example or try other sketches. Look at the the list of functions in the <a href="https://github.com/esp8266/Arduino/blob/master/doc/libraries.md">included libraries</a> and try to use them in your program.</p>
 
-<p>You can use <code>Serial.print()</code> family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via <code>Serial.begin(74880)</code>.</p>
+<p>You can use the <code>Serial.print()</code> family of functions to print diagnostic messages that you can then read in the Serial Monitor. Set the baud rate to 74880 to make it consistent with the bootloader via <code>Serial.begin(74880)</code>.</p>
 
 <p>Once you feel comfortable programming your ESP8266, come back here and read on.</p>
 
@@ -134,24 +135,155 @@
 <h2>
 <a id="the-circuit" class="anchor" href="#the-circuit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The circuit</h2>
 
-<p>Here's the schematic:
-<img src="img/schematic.png" alt="Schematic"></p>
+<p><img src="img/schematic.png" alt="Schematic"></p>
+
+<p>Explanation:</p>
+
+<ul>
+<li>U1 is a 2x4 DIP header for connecting the ESP module</li>
+<li>SERIAL is a 1x3 DIP header for connecting a serial interface
+
+<ul>
+<li>Connect GND, TX and RX to your USB-toSerial adapter's GND, RX and TX, respectively</li>
+<li>Double-check that the adapter uses 3.3V signal levels</li>
+</ul>
+</li>
+<li>RST and PRG are push buttons, activating RESET and Programming mode, respectively
+
+<ul>
+<li>to simply reset the board, push RST</li>
+<li>to enter programming mode 
+
+<ul>
+<li>push RST then PRG (keep both pushed)</li>
+<li>Release RST then PRG</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>C2 is across the rails, try to put it close to the module power pins (increases stability of the board)</li>
+<li>R1 and C1 is an RC delay circuit for reliable deep sleep operation
+
+<ul>
+<li>purpose is to keep CH_PD low for enough time for the board to properly reset upon waking from deep sleep</li>
+<li>only applies if your GPIO16 is tied to CH_PD</li>
+</ul>
+</li>
+<li>U2 is the digital thermometer chip (DS18S20)</li>
+<li>R2 is a pull-up</li>
+</ul>
+
+<h2>
+<a id="ubidots" class="anchor" href="#ubidots" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ubidots</h2>
+
+<ul>
+<li>Register at Ubidots</li>
+<li>Create a source with two variables:
+
+<ul>
+<li>Temperature (unit: C)</li>
+<li>Battery voltage (unit: mV)</li>
+</ul>
+</li>
+<li>Note your API token and the ID of these two variables</li>
+</ul>
 
 <h2>
 <a id="the-software" class="anchor" href="#the-software" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The software</h2>
 
-<p>See the <a href="src/ESPThermometer/ESPThermometer.ino">source</a></p>
+<p>Download and edit the <a href="src/ESPThermometer/ESPThermometer.ino">source</a></p>
+
+<ul>
+<li>Fill in you SSID and WiFi credentials</li>
+<li>Fill in your Ubidots token and variable IDs (from above)</li>
+</ul>
+
+<p>Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to an USB port on your computer</p>
+
+<p>Connect the power rails to an external 3.3V power source (e.g. 2xAA battery or a stabilized wall adapter)</p>
+
+<ul>
+<li>In general anything between 2.7 - 3.3 V should work</li>
+<li>Do <strong>not</strong> use the serial adapter's VCC</li>
+</ul>
+
+<p>Once you have everything connected, you should dowload the program to the module</p>
+
+<ul>
+<li>Put the module into program mode (push RST, PRG and then release RST, PRG)</li>
+<li>Verify that you get the correct bootloader prompt - see <a href="First%20steps%20-%20programming%20your%20ESP8266"></a>
+</li>
+<li>Load the program into the Arduino IDE and upload (make sure to use the same settings as in <a href="First%20steps%20-%20programming%20your%20ESP8266"></a>
+</li>
+<li>Rest the board for good measure (push and release RST)</li>
+</ul>
+
+<p>If everything went well you should see an output similar to this in the serial monitor:</p>
+
+<pre><code> ets Jan  8 2013,rst cause:2, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v3ffe8654
+~ld
+à
+ESP Thermometer starting...
+Chip ID: [&lt;your chip ID here&gt;]
+
+VCC = 2581 mV
+Requesting temperatures...DONE
+TEMP = 26.6 C
+Connecting and sending...
+.......WiFi connected
+IP address: 
+192.168.178.44
+Posting your variables
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 31 Aug 2016 20:18:29 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: close
+Vary: Accept-Encoding
+Vary: Accept
+Allow: POST, OPTIONS
+
+2c
+[{"status_code": 201}, {"status_code": 201}]
+0
+
+Entering deep sleep [ 557s ] ...
+
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+[... and so on ...]
+
+</code></pre>
 
 <h1>
 <a id="running-from-a-battery" class="anchor" href="#running-from-a-battery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running from a battery</h1>
 
+<p>I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Let's dig a little bit into how this was made possible and what can you do to further improve battery life.</p>
+
 <ul>
 <li>Deep sleep</li>
-<li>Power LED</li>
+<li>Power LED!</li>
+<li>Further work
+
+<ul>
+<li>proper deep sleep (GPIO16 to RST) with less frequent RF calibration</li>
+<li>use higher capacity batteries (e.g. D or A)</li>
+<li>update less frequently</li>
+</ul>
+</li>
 </ul>
 
 <h1>
 <a id="whats-next" class="anchor" href="#whats-next" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What's next?</h1>
+
+<p>There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.</p>
 
 <ul>
 <li>Dynamic WiFi setup</li>
@@ -164,10 +296,13 @@
 <li>replace Ubidots with some other (maybe custom) platform</li>
 </ul>
 </li>
+<li>Extend battery life (see above)</li>
 </ul>
 
 <h1>
 <a id="references-and-further-reading" class="anchor" href="#references-and-further-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References and further reading</h1>
+
+<p>TBD</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/gabormay">gabormay</a></p>
