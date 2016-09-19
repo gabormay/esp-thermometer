@@ -105,7 +105,7 @@ Connect the power rails to an external 3.3V power source (e.g. 2xAA battery or a
 - In general anything between 2.7 - 3.3 V should work
 - Do **not** use the serial adapter's VCC
 
-Once you have everything connected, you should dowload the program to the module
+Once you have everything connected, you should download the program to the module
 - Put the module into program mode (push RST, PRG and then release RST, PRG)
 - Verify that you get the correct bootloader prompt - see [](First steps - programming your ESP8266)
 - Load the program into the Arduino IDE and upload (make sure to use the same settings as in [](First steps - programming your ESP8266)
@@ -157,14 +157,23 @@ Entering deep sleep [ 557s ] ...
 ```
 
 # Running from a battery
-I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Let's dig a little bit into how this was made possible and what can you do to further improve battery life.
+I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Interestingly enough the thermometer chip proved to be more sensitive to loss of voltage. It stopped working and produced bogus measurements when the battery voltage fell below 2.4V or so. The ESP module worked fine until about 1.8V, which is pretty remarkable.
 
-- Deep sleep
-- Power LED!
-- Further work
-  * proper deep sleep (GPIO16 to RST) with less frequent RF calibration
-  * use higher capacity batteries (e.g. D or A)
-  * update less frequently
+Anyway, let's dig a little bit into how this was made possible and what can you do to further improve battery life.
+
+## Deep sleep
+TBD
+
+## Modifications to the board
+- Scrapping the Power LED
+- Connecting GPIO 16
+
+## Doing even better
+* use higher capacity batteries (e.g. D or A) and/or use 3 x AA (or A or D) and add a 3V power regulator
+* update less frequently (less often than every 10 minutes)
+* proper deep sleep (GPIO16 to RST) 
+  * allows less frequent RF calibration (saves battery life)
+  * allows multiple measurements to be collected and then transmitted together (e.g.collect samples every 5 minutes, but use WiFi to transmit only every 30 minutes)
 
 # What's next?
 There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.
@@ -178,4 +187,25 @@ There are a lot of ways to further improve and extend this project. Here are a f
 - Extend battery life (see above)
 
 # References and further reading
-TBD
+Reference
+- [Vendor docs](http://bbs.espressif.com/)
+- [Community ESP Wiki](http://www.esp8266.com/wiki/doku.php)
+- [Arduino Core for ESP8266](https://github.com/esp8266/Arduino)
+- [Some useful info here](https://github.com/esp8266/esp8266-wiki/wiki)
+
+Tutorials/guides
+- http://blog.brianmoses.net/2015/07/figuring-out-the-esp8266.html
+- http://williamdurand.fr/2015/03/17/playing-with-a-esp8266-wifi-module/
+- http://rancidbacon.com/files/kiwicon8/ESP8266_WiFi_Module_Quick_Start_Guide_v_1.0.4.pdf
+
+Deep sleep/battery operation
+- https://www.openhomeautomation.net/esp8266-battery/
+- ["RC time-delay circuit is recommended for CH_EN"](http://bbs.espressif.com/viewtopic.php?t=646)
+
+DS1820
+- [Data sheet](http://www.produktinfo.conrad.com/datenblaetter/175000-199999/176168-da-01-en-TEMP_SENSOR_DS18S20_TO92_MAXIM_DALLAS_.pdf)
+- [Arduino Lib](http://milesburton.com/Main_Page?title=Dallas_Temperature_Control_Library)
+- [also on GitHub](https://github.com/milesburton/Arduino-Temperature-Control-Library)
+
+
+
