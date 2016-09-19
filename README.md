@@ -207,9 +207,13 @@ Deep sleep/battery operation
 - ["RC time-delay circuit is recommended for CH_EN"](http://bbs.espressif.com/viewtopic.php?t=646)
 
 DS1820
+- [DS1820 Data sheet]
+- [DS1820 Arduino Library]
+  - https://github.com/milesburton/Arduino-Temperature-Control-Library
+- [OneWire Arduino Library]
+
 [DS1820 Data sheet]: http://www.produktinfo.conrad.com/datenblaetter/175000-199999/176168-da-01-en-TEMP_SENSOR_DS18S20_TO92_MAXIM_DALLAS_.pdf
 [DS1820 Arduino Library]: http://milesburton.com/Main_Page?title=Dallas_Temperature_Control_Library
-  https://github.com/milesburton/Arduino-Temperature-Control-Library
 [OneWire Arduino Library]: https://github.com/PaulStoffregen/OneWire
 
 
