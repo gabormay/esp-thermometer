@@ -167,26 +167,43 @@ Deep sleep is a power saving feature of the ESP8266 chip. When put to deep sleep
 Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with `setup()`), so you don't really need to `loop()` at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.
 
 ## Modifications to the board
-- Scrapping the Power LED
-- Connecting GPIO 16
+### Scrapping the Power LED
+
+The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. Thats almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which not a critical feature at all. On the ESP-01 board you don't have any control over this, so only option to get rid of this 'powet hog' is to scrape the LED physically from the board. See [Running ESP8266 from a battery] for details.
+
+### Connecting GPIO 16
+
+To be able to wake the chip up from deep sleep, GPIO need to be connected to CH_PD or RST. In case it is not connected on your board, you will have to do it yourself. See http://tim.jagenberg.info/2015/01/18/low-power-esp8266/
 
 ## Doing even better
-* use higher capacity batteries (e.g. D or A) and/or use 3 x AA (or A or D) and add a 3V power regulator
-* update less frequently (less often than every 10 minutes)
-* proper deep sleep (GPIO16 to RST) 
-  * allows less frequent RF calibration (saves battery life)
-  * allows multiple measurements to be collected and then transmitted together (e.g.collect samples every 5 minutes, but use WiFi to transmit only every 30 minutes)
+Here are a few things you can do to increase the battery life of your project even further.
+
+* Use higher capacity power supply
+  * You can use higher capacity batteries (e.g. D or A)
+  * You can also use higher voltage batteries and e.g. 3 x AA (or A or D) and add a 3V power regulator
+* Update less frequently (less often than every 10 minutes)
+  * Currently the project set up to wake up and update every ten minutes. 
+  * You can change the length of the sleep cycle on line [#31](https://github.com/gabormay/esp-thermometer/blob/master/src/ESPThermometer/ESPThermometer.ino#L31)
+* Proper deep sleep (GPIO16 to RST) 
+  * If you connect GPIO16 to RST then you can keep some state betweeen cycles. 
+  * In particular, you can set it up to do RF calibration less frequently
+  * You can also collect multiple measurements (e.g. every minute) then transmit them together as a batch
 
 # What's next?
 There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.
 
 - Dynamic WiFi setup
+  Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you will want to save this information betweeen the sleep cycles.
 - Dynamic Ubidots variable setup based on Chip ID
+  You can create the variables on the fly, e.g. using the chip ID (first check if they exists, and create them if not)
 - Implement additional hardware functions:
-  * connect a second sensor, e.g. for humidity or light
-  * add relay switch and control it through Ubidots
+  * connect a second sensor, e.g. for humidity or light (GPIO2 is still free)
+  * add relay switch and control it through Ubidots (again, GPIO2 can be used)
   * replace Ubidots with some other (maybe custom) platform
-- Extend battery life (see above)
+
+# Closing words
+
+Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!
 
 # References and further reading
 Reference
@@ -201,7 +218,7 @@ Tutorials/guides
 - http://rancidbacon.com/files/kiwicon8/ESP8266_WiFi_Module_Quick_Start_Guide_v_1.0.4.pdf
 
 Deep sleep/battery operation
-- https://www.openhomeautomation.net/esp8266-battery/
+- [Running ESP8266 from a battery]
 - ["RC time-delay circuit is recommended for CH_EN"](http://bbs.espressif.com/viewtopic.php?t=646)
 - [ESP Low Power Solutions]
 
@@ -215,6 +232,5 @@ DS1820
 [DS1820 Arduino Library]: http://milesburton.com/Main_Page?title=Dallas_Temperature_Control_Library
 [OneWire Arduino Library]: https://github.com/PaulStoffregen/OneWire
 [ESP Low Power Solutions]: http://www.espressif.com/sites/default/files/9b-esp8266-low_power_solutions_en_0.pdf
-
-
+[Running ESP8266 from a battery]: https://www.openhomeautomation.net/esp8266-battery/
 
