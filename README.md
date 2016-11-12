@@ -1,9 +1,5 @@
 The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.
 
->
-> This is still work in progress. Please check back later.
-> 
-
   ![Completed project photo 1](img/final-1.jpg)
   ![Completed project photo 2](img/final-2.jpg)
   
@@ -19,7 +15,7 @@ Here's what you're going to need:
 # General notes and caveats
 - ESP8266 works with 3.3V, the pins are _not_ 5V tolerant!
 - Use an external power supply for reliable programming (not the 3.3V from the USB converter for example)
-- If you're stuck or have an issue with setting up the ESP8266, please  try looking through the materials in the [References](References and further reading) section and also try Google - chances are somebody else had that problem and you can find a solution quickly
+- If you're stuck or have an issue with setting up the ESP8266, please try looking through the materials in the [References](References and further reading) section and also try Google - chances are somebody else had that problem and you can find a solution quickly
 
 # First steps - programming your ESP8266
 Start with the installation steps from https://github.com/esp8266/Arduino#installing-with-boards-manager:
@@ -74,7 +70,7 @@ Explanation:
 - U1 is a 2x4 DIP header for connecting the ESP module
 - SERIAL is a 1x3 DIP header for connecting a serial interface
   * Connect GND, TX and RX to your USB-toSerial adapter's GND, RX and TX, respectively
-  * Double-check that the adapter uses 3.3V signal levels
+  * Double-check that the adapter uses 3.3V signal levels (not 5v)
 - RST and PRG are push buttons, activating RESET and Programming mode, respectively
   * to simply reset the board, push RST
   * to enter programming mode 
@@ -103,17 +99,17 @@ Download and edit the [source](src/ESPThermometer/ESPThermometer.ino)
 - Fill in you SSID and WiFi credentials
 - Fill in your Ubidots token and variable IDs (from above)
 
-Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to an USB port on your computer
+Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to a USB port on your computer
 
 Connect the power rails to an external 3.3V power source (e.g. 2xAA battery or a stabilized wall adapter)
 - In general anything between 2.7 - 3.3 V should work
-- Do **not** use the serial adapter's VCC
+- Do **not** use the serial adapter's VCC, as it cannot provide the amount of current necessary for programming
 
 Once you have everything connected, you should download the program to the module
 - Put the module into program mode (push RST, PRG and then release RST, PRG)
 - Verify that you get the correct bootloader prompt - see [](First steps - programming your ESP8266)
 - Load the program into the Arduino IDE and upload (make sure to use the same settings as in [](First steps - programming your ESP8266)
-- Rest the board for good measure (push and release RST)
+- Reset the board for good measure (push and release RST)
 
 If everything went well you should see an output similar to this in the serial monitor:
 
@@ -161,12 +157,14 @@ Entering deep sleep [ 557s ] ...
 ```
 
 # Running from a battery
-I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Interestingly enough the thermometer chip proved to be more sensitive to loss of voltage. It stopped working and produced bogus measurements when the battery voltage fell below 2.4V or so. The ESP module worked fine until about 1.8V, which is pretty remarkable.
+I was able to run this project from 2 AA batteries for about 2-3 weeks - not great but not that bad either. Interestingly enough the thermometer chip proved to be more sensitive to loss of voltage. It stopped working and produced bogus measurements when the battery voltage fell below 2.4V or so. The ESP module worked fine until about 1.8V, which is pretty remarkable.
 
 Anyway, let's dig a little bit into how this was made possible and what can you do to further improve battery life.
 
 ## Deep sleep
-TBD
+Deep sleep is a power saving feature of the ESP8266 chip. When put to deep sleep, only an internal RTC circutry is powered, drawing very tiny current (~20uA). The rest of the chip is powered down and is completely inactive (no program runs for example). Once the specified delay is over, the RTC puts out a signal on GPIO16 which can be used to wake up the chip. Normally you would want to connect GPIO16 to RST to get the most features. On some ESP boards it is tied to CH_PD (chip enable) which works too but some of the features, i.e. keeping some state between sleep cycles is not supported. See the Application Note [ESP Low Power Solutions] from Expressif for more info. 
+
+Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with `setup()`), so you don't really need to `loop()` at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.
 
 ## Modifications to the board
 - Scrapping the Power LED
@@ -205,6 +203,7 @@ Tutorials/guides
 Deep sleep/battery operation
 - https://www.openhomeautomation.net/esp8266-battery/
 - ["RC time-delay circuit is recommended for CH_EN"](http://bbs.espressif.com/viewtopic.php?t=646)
+- [ESP Low Power Solutions]
 
 DS1820
 - [DS1820 Data sheet]
@@ -215,6 +214,7 @@ DS1820
 [DS1820 Data sheet]: http://www.produktinfo.conrad.com/datenblaetter/175000-199999/176168-da-01-en-TEMP_SENSOR_DS18S20_TO92_MAXIM_DALLAS_.pdf
 [DS1820 Arduino Library]: http://milesburton.com/Main_Page?title=Dallas_Temperature_Control_Library
 [OneWire Arduino Library]: https://github.com/PaulStoffregen/OneWire
+[ESP Low Power Solutions]: http://www.espressif.com/sites/default/files/9b-esp8266-low_power_solutions_en_0.pdf
 
 
 
