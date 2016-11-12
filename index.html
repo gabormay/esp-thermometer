@@ -30,10 +30,6 @@
       <section>
         <p>The objective of this project is to create a really inexpensive internet enabled thermometer to be able to monitor a room's temperature remotely.</p>
 
-<blockquote>
-<p>This is still work in progress. Please check back later.</p>
-</blockquote>
-
 <p><img src="img/final-1.jpg" alt="Completed project photo 1">
   <img src="img/final-2.jpg" alt="Completed project photo 2"></p>
 
@@ -57,7 +53,7 @@
 <ul>
 <li>ESP8266 works with 3.3V, the pins are <em>not</em> 5V tolerant!</li>
 <li>Use an external power supply for reliable programming (not the 3.3V from the USB converter for example)</li>
-<li>If you're stuck or have an issue with setting up the ESP8266, please  try looking through the materials in the <a href="References%20and%20further%20reading">References</a> section and also try Google - chances are somebody else had that problem and you can find a solution quickly</li>
+<li>If you're stuck or have an issue with setting up the ESP8266, please try looking through the materials in the <a href="References%20and%20further%20reading">References</a> section and also try Google - chances are somebody else had that problem and you can find a solution quickly</li>
 </ul>
 
 <h1>
@@ -145,7 +141,7 @@
 
 <ul>
 <li>Connect GND, TX and RX to your USB-toSerial adapter's GND, RX and TX, respectively</li>
-<li>Double-check that the adapter uses 3.3V signal levels</li>
+<li>Double-check that the adapter uses 3.3V signal levels (not 5v)</li>
 </ul>
 </li>
 <li>RST and PRG are push buttons, activating RESET and Programming mode, respectively
@@ -207,13 +203,13 @@
 <li>Fill in your Ubidots token and variable IDs (from above)</li>
 </ul>
 
-<p>Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to an USB port on your computer</p>
+<p>Connect your circuit to the serial adapter. Make sure the serial interface is connected to the USB-to-serial adapter properly (see above) and the adapter is plugged in to a USB port on your computer</p>
 
 <p>Connect the power rails to an external 3.3V power source (e.g. 2xAA battery or a stabilized wall adapter)</p>
 
 <ul>
 <li>In general anything between 2.7 - 3.3 V should work</li>
-<li>Do <strong>not</strong> use the serial adapter's VCC</li>
+<li>Do <strong>not</strong> use the serial adapter's VCC, as it cannot provide the amount of current necessary for programming</li>
 </ul>
 
 <p>Once you have everything connected, you should download the program to the module</p>
@@ -224,7 +220,7 @@
 </li>
 <li>Load the program into the Arduino IDE and upload (make sure to use the same settings as in <a href="First%20steps%20-%20programming%20your%20ESP8266"></a>
 </li>
-<li>Rest the board for good measure (push and release RST)</li>
+<li>Reset the board for good measure (push and release RST)</li>
 </ul>
 
 <p>If everything went well you should see an output similar to this in the serial monitor:</p>
@@ -274,34 +270,57 @@ Entering deep sleep [ 557s ] ...
 <h1>
 <a id="running-from-a-battery" class="anchor" href="#running-from-a-battery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running from a battery</h1>
 
-<p>I was able to run this project from 2 AA batteries for about 2 weeks - not great but not that bad either. Interestingly enough the thermometer chip proved to be more sensitive to loss of voltage. It stopped working and produced bogus measurements when the battery voltage fell below 2.4V or so. The ESP module worked fine until about 1.8V, which is pretty remarkable.</p>
+<p>I was able to run this project from 2 AA batteries for about 2-3 weeks - not great but not that bad either. Interestingly enough the thermometer chip proved to be more sensitive to loss of voltage. It stopped working and produced bogus measurements when the battery voltage fell below 2.4V or so. The ESP module worked fine until about 1.8V, which is pretty remarkable.</p>
 
 <p>Anyway, let's dig a little bit into how this was made possible and what can you do to further improve battery life.</p>
 
 <h2>
 <a id="deep-sleep" class="anchor" href="#deep-sleep" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deep sleep</h2>
 
-<p>TBD</p>
+<p>Deep sleep is a power saving feature of the ESP8266 chip. When put to deep sleep, only an internal RTC circutry is powered, drawing very tiny current (~20uA). The rest of the chip is powered down and is completely inactive (no program runs for example). Once the specified delay is over, the RTC puts out a signal on GPIO16 which can be used to wake up the chip. Normally you would want to connect GPIO16 to RST to get the most features. On some ESP boards it is tied to CH_PD (chip enable) which works too but some of the features, i.e. keeping some state between sleep cycles is not supported. See the Application Note <a href="http://www.espressif.com/sites/default/files/9b-esp8266-low_power_solutions_en_0.pdf">ESP Low Power Solutions</a> from Expressif for more info. </p>
+
+<p>Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with <code>setup()</code>), so you don't really need to <code>loop()</code> at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.</p>
 
 <h2>
 <a id="modifications-to-the-board" class="anchor" href="#modifications-to-the-board" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modifications to the board</h2>
 
-<ul>
-<li>Scrapping the Power LED</li>
-<li>Connecting GPIO 16</li>
-</ul>
+<h3>
+<a id="scrapping-the-power-led" class="anchor" href="#scrapping-the-power-led" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scrapping the Power LED</h3>
+
+<p>The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. Thats almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which not a critical feature at all. On the ESP-01 board you don't have any control over this, so only option to get rid of this 'powet hog' is to scrape the LED physically from the board. See <a href="https://www.openhomeautomation.net/esp8266-battery/">Running ESP8266 from a battery</a> for details.</p>
+
+<h3>
+<a id="connecting-gpio-16" class="anchor" href="#connecting-gpio-16" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connecting GPIO 16</h3>
+
+<p>To be able to wake the chip up from deep sleep, GPIO need to be connected to CH_PD or RST. In case it is not connected on your board, you will have to do it yourself. See <a href="http://tim.jagenberg.info/2015/01/18/low-power-esp8266/">http://tim.jagenberg.info/2015/01/18/low-power-esp8266/</a></p>
 
 <h2>
 <a id="doing-even-better" class="anchor" href="#doing-even-better" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Doing even better</h2>
 
-<ul>
-<li>use higher capacity batteries (e.g. D or A) and/or use 3 x AA (or A or D) and add a 3V power regulator</li>
-<li>update less frequently (less often than every 10 minutes)</li>
-<li>proper deep sleep (GPIO16 to RST) 
+<p>Here are a few things you can do to increase the battery life of your project even further.</p>
 
 <ul>
-<li>allows less frequent RF calibration (saves battery life)</li>
-<li>allows multiple measurements to be collected and then transmitted together (e.g.collect samples every 5 minutes, but use WiFi to transmit only every 30 minutes)</li>
+<li>Use higher capacity power supply
+
+<ul>
+<li>You can use higher capacity batteries (e.g. D or A)</li>
+<li>You can also use higher voltage batteries and e.g. 3 x AA (or A or D) and add a 3V power regulator</li>
+</ul>
+</li>
+<li>Update less frequently (less often than every 10 minutes)
+
+<ul>
+<li>Currently the project set up to wake up and update every ten minutes. </li>
+<li>You can change the length of the sleep cycle on line <a href="https://github.com/gabormay/esp-thermometer/blob/master/src/ESPThermometer/ESPThermometer.ino#L31">#31</a>
+</li>
+</ul>
+</li>
+<li>Proper deep sleep (GPIO16 to RST) 
+
+<ul>
+<li>If you connect GPIO16 to RST then you can keep some state betweeen cycles. </li>
+<li>In particular, you can set it up to do RF calibration less frequently</li>
+<li>You can also collect multiple measurements (e.g. every minute) then transmit them together as a batch</li>
 </ul>
 </li>
 </ul>
@@ -312,18 +331,24 @@ Entering deep sleep [ 557s ] ...
 <p>There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.</p>
 
 <ul>
-<li>Dynamic WiFi setup</li>
-<li>Dynamic Ubidots variable setup based on Chip ID</li>
+<li>Dynamic WiFi setup
+Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you will want to save this information betweeen the sleep cycles.</li>
+<li>Dynamic Ubidots variable setup based on Chip ID
+You can create the variables on the fly, e.g. using the chip ID (first check if they exists, and create them if not)</li>
 <li>Implement additional hardware functions:
 
 <ul>
-<li>connect a second sensor, e.g. for humidity or light</li>
-<li>add relay switch and control it through Ubidots</li>
+<li>connect a second sensor, e.g. for humidity or light (GPIO2 is still free)</li>
+<li>add relay switch and control it through Ubidots (again, GPIO2 can be used)</li>
 <li>replace Ubidots with some other (maybe custom) platform</li>
 </ul>
 </li>
-<li>Extend battery life (see above)</li>
 </ul>
+
+<h1>
+<a id="closing-words" class="anchor" href="#closing-words" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Closing words</h1>
+
+<p>Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!</p>
 
 <h1>
 <a id="references-and-further-reading" class="anchor" href="#references-and-further-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References and further reading</h1>
@@ -348,8 +373,9 @@ Entering deep sleep [ 557s ] ...
 <p>Deep sleep/battery operation</p>
 
 <ul>
-<li><a href="https://www.openhomeautomation.net/esp8266-battery/">https://www.openhomeautomation.net/esp8266-battery/</a></li>
+<li><a href="https://www.openhomeautomation.net/esp8266-battery/">Running ESP8266 from a battery</a></li>
 <li><a href="http://bbs.espressif.com/viewtopic.php?t=646">"RC time-delay circuit is recommended for CH_EN"</a></li>
+<li><a href="http://www.espressif.com/sites/default/files/9b-esp8266-low_power_solutions_en_0.pdf">ESP Low Power Solutions</a></li>
 </ul>
 
 <p>DS1820</p>
