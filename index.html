@@ -279,7 +279,7 @@ Entering deep sleep [ 557s ] ...
 
 <p>Deep sleep is a power saving feature of the ESP8266 chip. When put to deep sleep, only an internal RTC circutry is powered, drawing very tiny current (~20uA). The rest of the chip is powered down and is completely inactive (no program runs for example). Once the specified delay is over, the RTC puts out a signal on GPIO16 which can be used to wake up the chip. Normally you would want to connect GPIO16 to RST to get the most features. On some ESP boards it is tied to CH_PD (chip enable) which works too but some of the features, i.e. keeping some state between sleep cycles is not supported. See the Application Note <a href="http://www.espressif.com/sites/default/files/9b-esp8266-low_power_solutions_en_0.pdf">ESP Low Power Solutions</a> from Expressif for more info. </p>
 
-<p>Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with <code>setup()</code>), so you don't really need to <code>loop()</code> at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.</p>
+<p>Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with <code>setup()</code>), so you don't really need to put anything in <code>loop()</code> at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.</p>
 
 <h2>
 <a id="modifications-to-the-board" class="anchor" href="#modifications-to-the-board" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modifications to the board</h2>
@@ -287,7 +287,7 @@ Entering deep sleep [ 557s ] ...
 <h3>
 <a id="scrapping-the-power-led" class="anchor" href="#scrapping-the-power-led" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scrapping the Power LED</h3>
 
-<p>The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. Thats almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which not a critical feature at all. On the ESP-01 board you don't have any control over this, so only option to get rid of this 'powet hog' is to scrape the LED physically from the board. See <a href="https://www.openhomeautomation.net/esp8266-battery/">Running ESP8266 from a battery</a> for details.</p>
+<p>The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. That is almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which is not a critical feature at all. On the ESP-01 board you don't have any control over this, so your only option to get rid of this 'powet hog' is to scrape the LED physically from the board. Be gentle, but firm. See <a href="https://www.openhomeautomation.net/esp8266-battery/">Running ESP8266 from a battery</a> for details.</p>
 
 <h3>
 <a id="connecting-gpio-16" class="anchor" href="#connecting-gpio-16" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connecting GPIO 16</h3>
@@ -304,7 +304,7 @@ Entering deep sleep [ 557s ] ...
 
 <ul>
 <li>You can use higher capacity batteries (e.g. D or A)</li>
-<li>You can also use higher voltage batteries and e.g. 3 x AA (or A or D) and add a 3V power regulator</li>
+<li>You can also use higher voltage batteries e.g. 3 x AA (or A or D) and add a 3V power regulator</li>
 </ul>
 </li>
 <li>Update less frequently (less often than every 10 minutes)
@@ -332,15 +332,15 @@ Entering deep sleep [ 557s ] ...
 
 <ul>
 <li>Dynamic WiFi setup
-Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you will want to save this information betweeen the sleep cycles.</li>
+Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you would want to save this information betweeen the sleep cycles.</li>
 <li>Dynamic Ubidots variable setup based on Chip ID
-You can create the variables on the fly, e.g. using the chip ID (first check if they exists, and create them if not)</li>
+You can create the variables on the fly, e.g. using the chip ID (first check if they exist, and create them if not)</li>
 <li>Implement additional hardware functions:
 
 <ul>
 <li>connect a second sensor, e.g. for humidity or light (GPIO2 is still free)</li>
 <li>add relay switch and control it through Ubidots (again, GPIO2 can be used)</li>
-<li>replace Ubidots with some other (maybe custom) platform</li>
+<li>replace Ubidots with some other (maybe custom) IoT platform of your choice</li>
 </ul>
 </li>
 </ul>
@@ -348,7 +348,7 @@ You can create the variables on the fly, e.g. using the chip ID (first check if 
 <h1>
 <a id="closing-words" class="anchor" href="#closing-words" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Closing words</h1>
 
-<p>Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!</p>
+<p>Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as my time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!</p>
 
 <h1>
 <a id="references-and-further-reading" class="anchor" href="#references-and-further-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References and further reading</h1>
