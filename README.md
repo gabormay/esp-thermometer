@@ -164,12 +164,12 @@ Anyway, let's dig a little bit into how this was made possible and what can you 
 ## Deep sleep
 Deep sleep is a power saving feature of the ESP8266 chip. When put to deep sleep, only an internal RTC circutry is powered, drawing very tiny current (~20uA). The rest of the chip is powered down and is completely inactive (no program runs for example). Once the specified delay is over, the RTC puts out a signal on GPIO16 which can be used to wake up the chip. Normally you would want to connect GPIO16 to RST to get the most features. On some ESP boards it is tied to CH_PD (chip enable) which works too but some of the features, i.e. keeping some state between sleep cycles is not supported. See the Application Note [ESP Low Power Solutions] from Expressif for more info. 
 
-Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with `setup()`), so you don't really need to `loop()` at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.
+Note that, in any case, upon wake-up, your program (sketch) will run from the very beginning (starting with `setup()`), so you don't really need to put anything in `loop()` at all. See the Application Note mentioned above for options to save some variables between these sleep cycles.
 
 ## Modifications to the board
 ### Scrapping the Power LED
 
-The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. Thats almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which not a critical feature at all. On the ESP-01 board you don't have any control over this, so only option to get rid of this 'powet hog' is to scrape the LED physically from the board. See [Running ESP8266 from a battery] for details.
+The onboard power LED draws quite a bit of current (few milliamps at least) all the time the board is powered, even during deep sleep. That is almost 1000 times the current the chip needs in deep sleep, for just a plain power indicator, which is not a critical feature at all. On the ESP-01 board you don't have any control over this, so your only option to get rid of this 'powet hog' is to scrape the LED physically from the board. Be gentle, but firm. See [Running ESP8266 from a battery] for details.
 
 ### Connecting GPIO 16
 
@@ -180,7 +180,7 @@ Here are a few things you can do to increase the battery life of your project ev
 
 * Use higher capacity power supply
   * You can use higher capacity batteries (e.g. D or A)
-  * You can also use higher voltage batteries and e.g. 3 x AA (or A or D) and add a 3V power regulator
+  * You can also use higher voltage batteries e.g. 3 x AA (or A or D) and add a 3V power regulator
 * Update less frequently (less often than every 10 minutes)
   * Currently the project set up to wake up and update every ten minutes. 
   * You can change the length of the sleep cycle on line [#31](https://github.com/gabormay/esp-thermometer/blob/master/src/ESPThermometer/ESPThermometer.ino#L31)
@@ -193,17 +193,17 @@ Here are a few things you can do to increase the battery life of your project ev
 There are a lot of ways to further improve and extend this project. Here are a few ideas and pointers to get you started.
 
 - Dynamic WiFi setup
-  Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you will want to save this information betweeen the sleep cycles.
+  Instead of hardcoding the SSID and password, provide a simple Web interface to connect to the WiFi initially. Note that this will only work with proper deep sleep (GPIO16 to RST) as you would want to save this information betweeen the sleep cycles.
 - Dynamic Ubidots variable setup based on Chip ID
-  You can create the variables on the fly, e.g. using the chip ID (first check if they exists, and create them if not)
+  You can create the variables on the fly, e.g. using the chip ID (first check if they exist, and create them if not)
 - Implement additional hardware functions:
   * connect a second sensor, e.g. for humidity or light (GPIO2 is still free)
   * add relay switch and control it through Ubidots (again, GPIO2 can be used)
-  * replace Ubidots with some other (maybe custom) platform
+  * replace Ubidots with some other (maybe custom) IoT platform of your choice
 
 # Closing words
 
-Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!
+Hope you've found this useful. If you run into problems and could not find anything on the internet and in the referenced documents, let me know - I will try to help as much as my time allows. In any case, please feel free to use the information presented in this article in any way you wish (no warranty, though, please refer to the LICENSE). Good luck!
 
 # References and further reading
 Reference
