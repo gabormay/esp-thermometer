@@ -1,0 +1,5 @@
+stylesheets/* linguist-vendored
+javascript/* linguist-vendored
+param.json linguist-vendored
+index.html linguist-documentation
+img/* linguist-documentation
